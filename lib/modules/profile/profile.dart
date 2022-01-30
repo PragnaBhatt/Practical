@@ -39,18 +39,13 @@ class _Profile_ScreenState extends State<Profile_Screen> {
           PopupMenuButton(
             onSelected: (selectedValue) {
               if (selectedValue == 1) {
-                // SharedPreferences preferences =
-                //     await SharedPreferences.getInstance();
-                // await preferences.remove(PreferencesConstants.ISLOGIN);
-                // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                //     builder: (BuildContext context) => AuthScreen()));
-
                 showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
                         title: const Text("Are you sure?"),
-                        content: const Text("Are you sure to logout from application?"),
+                        content: const Text(
+                            "Are you sure to logout from application?"),
                         actions: [
                           ElevatedButton(
                               onPressed: () async {
@@ -91,7 +86,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
           const SizedBox(
             height: 40,
           ),
-          Center(
+          const Center(
             child: CircleAvatar(
               radius: 50,
               backgroundImage: NetworkImage(
