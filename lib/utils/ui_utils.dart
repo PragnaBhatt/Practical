@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:practical/constants/color_constants.dart';
 
-
 class UiUtils {
+//   static errorSnackBar({String title = 'Error', required String message}) {
+   
+//  const snackBar = SnackBar(
+//   content: Text('Yay! A SnackBar!'),
+//   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//   }
 
-
- 
-
-  static GetBar errorSnackBar({String title = 'Error', String? message}) {
+  static GetBar errorSnackBar1({String title = 'Error', String? message}) {
     Get.log("[$title] $message", isError: true);
     return GetBar(
       // titleText: Text(title.tr,
@@ -16,7 +18,7 @@ class UiUtils {
       //         .merge(TextStyle(color: Get.theme.primaryColor))),
       messageText: Text(
         message!,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black87,
           fontSize: 14.0,
         ),
@@ -48,6 +50,4 @@ class UiUtils {
       duration: Duration(seconds: 5),
     );
   }
-
- 
 }

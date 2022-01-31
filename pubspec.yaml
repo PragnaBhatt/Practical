@@ -42,6 +42,8 @@ dependencies:
   shared_preferences: ^2.0.12
   flutter_cupertino_localizations: ^1.0.1
   provider: ^6.0.2
+  dio: ^4.0.4
+  flutter_spinkit: ^5.1.0
 
 dev_dependencies:
   flutter_test:

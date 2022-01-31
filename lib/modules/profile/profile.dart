@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:practical/constants/preferences_constants.dart';
-import 'package:practical/modules/screens/auth_screen.dart.dart';
+import 'package:practical/constants/size_constants.dart';
+import 'package:practical/modules/login/screens/auth_screen.dart.dart';
 import 'package:practical/routes/app_routes.dart';
 import 'package:practical/utils/ui_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,13 +18,16 @@ class _Profile_ScreenState extends State<Profile_Screen> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late SharedPreferences _sharedPreferences;
   RxString User_Name = ''.obs;
+  RxString User_Email = ''.obs;
   @override
   void initState() {
     _prefs.then((SharedPreferences sharedPreferences) {
       _sharedPreferences = sharedPreferences;
 
-      User_Name.value =
+      User_Email.value =
           _sharedPreferences.getString(PreferencesConstants.EMAIL)!;
+      User_Name.value =
+          _sharedPreferences.getString(PreferencesConstants.USERNAME)!;
       super.initState();
     }).catchError((err) {
       //   UiUtils.errorSnackBar(message: '$err').show();
@@ -49,11 +53,15 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                         actions: [
                           ElevatedButton(
                               onPressed: () async {
-                                Navigator.of(context).pop(true);
+                                Navigator.of(context).pop();
                                 SharedPreferences preferences =
                                     await SharedPreferences.getInstance();
                                 await preferences
                                     .remove(PreferencesConstants.ISLOGIN);
+                                await preferences
+                                    .remove(PreferencesConstants.USERID);
+                                await preferences
+                                    .remove(PreferencesConstants.EMAIL);
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
@@ -62,7 +70,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                               child: const Text("OK")),
                           ElevatedButton(
                               onPressed: () {
-                                Navigator.of(context).pop(false);
+                                Navigator.of(context).pop();
                               },
                               child: const Text("Cancel"))
                         ],
@@ -97,7 +105,20 @@ class _Profile_ScreenState extends State<Profile_Screen> {
             height: 20,
           ),
           Obx(() {
-            return Text(User_Name.value);
+            return Column(
+              children: [
+                Text(
+                  User_Name.value,
+                  style: const TextStyle(
+                      fontSize: SizeConstants.SIZE_16,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  User_Email.value,
+                  style: const TextStyle(fontSize: SizeConstants.SIZE_14),
+                )
+              ],
+            );
           }),
         ],
       ),

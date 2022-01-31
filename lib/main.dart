@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:practical/common/AppLanguage.dart';
 import 'package:practical/common/app_localizations.dart';
-import 'package:practical/modules/screens/auth_screen.dart.dart';
 import 'package:practical/modules/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -48,11 +47,13 @@ class MyApp extends StatelessWidget {
             title: 'Practical Demo',
             theme: ThemeData(
               primarySwatch: Colors.blue,
+              // fontFamily: 'PoppinsRegular',
             ),
 
             // home: AuthScreen(),
             home: const SplashScreen(),
             debugShowCheckedModeBanner: false,
+            //     routes: {//can define but as for static ignore as of now also maintained all screen in app routes },
           );
         },
       ),

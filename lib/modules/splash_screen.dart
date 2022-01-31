@@ -6,8 +6,8 @@ import 'package:practical/constants/color_constants.dart';
 import 'package:practical/constants/images_path.dart';
 import 'package:practical/constants/preferences_constants.dart';
 import 'package:practical/modules/controllers/common_parm_controller.dart';
+import 'package:practical/modules/login/screens/auth_screen.dart.dart';
 import 'package:practical/modules/profile/profile.dart';
-import 'package:practical/modules/screens/auth_screen.dart.dart';
 import 'package:practical/routes/app_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

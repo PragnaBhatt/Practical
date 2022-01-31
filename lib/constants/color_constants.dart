@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class ColorConstants {
   // static const colorPrimary = const Color(Colors.red);
-  static const Color colorPrimary = Colors.red;
-  static const colorPrimaryDark = colorPrimary;
+  static const Color colorPrimary = Colors.blueAccent;
+  static const colorPrimaryDark = Colors.blue;
   static const colorAccent = colorPrimary;
   static const colorCanvas = Color(0xFFe8f5e9);
   static const colorCanvas_light = Color(0xFFF8f5e9);

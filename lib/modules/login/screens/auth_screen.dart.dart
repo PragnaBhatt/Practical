@@ -2,13 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:practical/api/api_implementer.dart';
 import 'package:practical/common/AppLanguage.dart';
 import 'package:practical/common/app_localizations.dart';
 import 'package:practical/constants/color_constants.dart';
 import 'package:practical/constants/preferences_constants.dart';
 import 'package:practical/modules/controllers/common_parm_controller.dart';
+import 'package:practical/modules/login/models/login_model.dart';
 import 'package:practical/modules/profile/profile.dart';
 import 'package:practical/routes/app_routes.dart';
+import 'package:practical/utils/app_dialogs.dart';
 import 'package:practical/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -167,8 +170,9 @@ class _AuthCardState extends State<AuthCard> {
     _prefs.then((SharedPreferences sharedPreferences) {
       _sharedPreferences = sharedPreferences;
     }).catchError((err) {
-      UiUtils.errorSnackBar(message: 'Failed to get shared preference object!')
-          .show();
+      final snackBar = const SnackBar(
+          content: Text('Failed to get shared preference object!'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
     _passwordVisible = false;
     super.initState();
@@ -191,12 +195,15 @@ class _AuthCardState extends State<AuthCard> {
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
 
-  void _storeLoginData(String email, String isLogin) async {
+  void _storeLoginData(
+      String email, String userId, String userName, String isLogin) async {
     await _sharedPreferences.setString(PreferencesConstants.EMAIL, email);
+    await _sharedPreferences.setString(PreferencesConstants.USERID, userId);
+    await _sharedPreferences.setString(PreferencesConstants.USERNAME, userName);
 
     await _sharedPreferences.setString(PreferencesConstants.ISLOGIN, isLogin);
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => Profile_Screen()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) => const Profile_Screen()));
   }
 
   void _submit() {
@@ -211,8 +218,47 @@ class _AuthCardState extends State<AuthCard> {
     if (_authMode == AuthMode.Login) {
       // Log user in
       print('login data......');
-      _storeLoginData(_emailController.text, "1");
-    
+      FocusScope.of(context).unfocus(); //hidekeyboard
+      // UiUtils.errorSnackBar(title: 'Invalid', message: ' loginModel.message');
+
+      AppDialogs.showProgressDialog(context: context);
+      ApiImplementer.checkLoginApiImplementer(
+              user_name: _emailController.text.toString().trim(),
+              password: _passwordController.text.toString().trim())
+          .then((LoginModel loginModel) {
+        print(loginModel.message);
+
+        Navigator.pop(context); //hide progressbar
+        // check valid or not
+        if (loginModel.code == 1) {
+          // UiUtils.errorSnackBar(title: 'Invalid', message: loginModel.message)
+          //     .show();
+          final snackBar =
+              SnackBar(content: Text(loginModel.message.toString()));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else if (loginModel.code == 0) {
+          //backend pass and can move to nxt screen
+          _storeLoginData(
+              loginModel.data!.email.toString(),
+              loginModel.data!.id.toString(),
+              loginModel.data!.name.toString(),
+              "1");
+        } else {
+          //some thing went wrong in any other unhandled conditions
+
+          AppDialogs.showErrorDialog(
+              context: context,
+              errorMsg: 'Something went wrong please try again!',
+              onOkBtnClickListener: () => Navigator.pop(context));
+        }
+      }).catchError((err) {
+        //hide progress
+        Navigator.pop(context);
+        AppDialogs.showErrorDialog(
+            context: context,
+            errorMsg: err.toString(),
+            onOkBtnClickListener: () => Navigator.pop(context));
+      });
     } else {
       // Sign user up
     }
@@ -220,6 +266,7 @@ class _AuthCardState extends State<AuthCard> {
     //   _isLoading = false;
     // });
   }
+
 //not implementaed as said optional //PRAGNA
   void _switchAuthMode() {
     if (_authMode == AuthMode.Login) {
